@@ -1,0 +1,40 @@
+using System;
+using System.IO;
+using System.Windows.Forms;
+using YamlDotNet.RepresentationModel;
+
+private void btnOpenFile_Click(object sender, EventArgs e)
+{
+    if (openFileDialog1.ShowDialog() == DialogResult.OK)
+    {
+        try
+        {
+            var yaml = new YamlStream();
+            yaml.Load(new StringReader(File.ReadAllText(openFileDialog1.FileName)));
+
+            var rootNode = (YamlMappingNode)yaml.Documents[0].RootNode;
+            PopulateGridView(rootNode);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"An error occurred: {ex.Message}");
+        }
+    }
+}
+
+private void PopulateGridView(YamlMappingNode mapping)
+{
+    dataGridView1.Rows.Clear();
+    dataGridView1.Columns.Clear();
+
+    dataGridView1.Columns.Add("Key", "Key");
+    dataGridView1.Columns.Add("Value", "Value");
+
+    foreach (var entry in mapping.Children)
+    {
+        var key = entry.Key.ToString();
+        var value = entry.Value.ToString();
+
+        dataGridView1.Rows.Add(key, value);
+    }
+}
