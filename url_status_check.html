@@ -9,6 +9,17 @@
     <button onclick="checkUrls()">Check URLs</button>
     <button onclick="repeatFailed()">Repeat Failed</button>
     <button onclick="clearStatus()">Clear Status</button>
+    <br>
+    Repeat Interval: <input type="number" id="intervalInput" min="1" value="5">
+    <select id="intervalType">
+        <option value="seconds">Seconds</option>
+        <option value="minutes">Minutes</option>
+    </select>
+    <button onclick="startAutoCheck()">Start Auto Check</button>
+    <button onclick="stopAutoCheck()">Stop Auto Check</button>
+    <span id="autoCheckStatus"></span>
+    <button onclick="copyTableToClipboard()">Copy Table to Clipboard</button>
+    <br><br>
     <table id="urlStatusList">
         <tr>
             <th>URL</th>
@@ -19,6 +30,7 @@
 
     <script>
         let failedUrls = [];
+        let autoCheckIntervalId = null;
 
         function checkUrls() {
             const urlList = document.getElementById('urlInput').value.split('\n');
@@ -59,6 +71,42 @@
 
         function clearStatus() {
             document.getElementById('urlStatusList').innerHTML = "";
+        }
+
+        function startAutoCheck() {
+            const interval = document.getElementById('intervalInput').value;
+            const intervalType = document.getElementById('intervalType').value;
+            const intervalMs = intervalType === 'seconds' ? interval * 1000 : interval * 60000;
+
+            if (autoCheckIntervalId) clearInterval(autoCheckIntervalId);
+            autoCheckIntervalId = setInterval(checkUrls, intervalMs);
+            document.getElementById('autoCheckStatus').textContent = 'Auto Check ON';
+        }
+
+        function stopAutoCheck() {
+            if (autoCheckIntervalId) clearInterval(autoCheckIntervalId);
+            document.getElementById('autoCheckStatus').textContent = 'Auto Check OFF';
+        }
+
+        function copyTableToClipboard() {
+            const table = document.getElementById('urlStatusList');
+            let tableText = '';
+
+            for (let i = 0, row; row = table.rows[i]; i++) {
+                for (let j = 0, col; col = row.cells[j]; j++) {
+                    tableText += col.innerText + '\t';
+                }
+                tableText += '\n';
+            }
+
+            const textArea = document.createElement('textarea');
+            textArea.value = tableText;
+            document.body.appendChild(textArea);
+            
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Table copied to clipboard');
         }
     </script>
 </body>
