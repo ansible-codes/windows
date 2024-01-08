@@ -11,17 +11,16 @@ Set objTextFile = objFSO.OpenTextFile("url_list.txt", 1) ' 1 = ForReading
 ' Create HTTP request object
 Set objHTTP = CreateObject("MSXML2.ServerXMLHTTP.6.0")
 
-' Enable Windows Integrated Authentication
-objHTTP.setOption 2, 13056 ' SXH_SERVER_CERT_IGNORE_ALL_SERVER_ERRORS
-objHTTP.Open "GET", url, False, "DOMAIN\username", "password" ' Use domain credentials if needed
-
 ' Read and process each line from the file
 Do Until objTextFile.AtEndOfStream
     strLine = objTextFile.ReadLine
     url = Trim(strLine) ' Read URL
 
+    ' Enable Windows Integrated Authentication
+    objHTTP.setOption 2, 13056 ' SXH_SERVER_CERT_IGNORE_ALL_SERVER_ERRORS
+    objHTTP.Open "GET", url, False ' Use current user credentials for SSO
+
     ' Send HTTP request to the URL
-    objHTTP.Open "GET", url, False
     objHTTP.Send ""
 
     ' Check response status and print the result
