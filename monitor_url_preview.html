@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Frame Viewer</title>
+    <style>
+        .frame {
+            width: 100%;
+            height: 200px;
+            border: none;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>URL Frame Viewer</h1>
+    <textarea id="urlList" rows="10" cols="50" placeholder="Enter URLs, one per line"></textarea><br>
+    <button onclick="loadUrls()">Load First 10 URLs</button>
+    <button onclick="loadNextUrls()">Next 10 URLs</button>
+    <div id="frameContainer"></div>
+
+    <script>
+        let currentStart = 0;
+        const batchSize = 10;
+
+        function loadUrls() {
+            const urls = document.getElementById('urlList').value.split('\n');
+            const frameContainer = document.getElementById('frameContainer');
+            frameContainer.innerHTML = ''; // Clear existing frames
+            currentStart = 0; // Reset start index
+
+            for (let i = 0; i < batchSize && i < urls.length; i++) {
+                const frame = document.createElement('iframe');
+                frame.src = urls[i];
+                frame.className = 'frame';
+                frameContainer.appendChild(frame);
+            }
+        }
+
+        function loadNextUrls() {
+            const urls = document.getElementById('urlList').value.split('\n');
+            const frameContainer = document.getElementById('frameContainer');
+            frameContainer.innerHTML = ''; // Clear existing frames
+            currentStart += batchSize; // Move to next batch
+
+            for (let i = currentStart; i < currentStart + batchSize && i < urls.length; i++) {
+                const frame = document.createElement('iframe');
+                frame.src = urls[i];
+                frame.className = 'frame';
+                frameContainer.appendChild(frame);
+            }
+        }
+    </script>
+</body>
+</html>
