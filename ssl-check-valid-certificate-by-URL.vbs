@@ -54,11 +54,13 @@ objTextFile.Write finalHtmlOutput
 objTextFile.Close
 
 ' Display results in message boxes
-If Len(msgBoxOutputOK) > 23 Then ' Length of initial message + vbCrLf
+If msgBoxOutputOK <> "SSL Check OK for URLs:" & vbCrLf Then
     MsgBox msgBoxOutputOK, vbInformation, "SSL Check - OK"
 End If
-If Len(msgBoxOutputFail) > 27 Then ' Length of initial message + vbCrLf
+
+If msgBoxOutputFail <> "SSL Check FAILED for URLs:" & vbCrLf Then
     MsgBox msgBoxOutputFail, vbExclamation, "SSL Check - Failed"
+End If
 
 ' Clean up
 Set objTextFile = Nothing
