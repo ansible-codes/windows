@@ -1,11 +1,13 @@
 Option Explicit
 
 Dim objFSO, objTextFile, strLine, objHTTP, url
-Dim htmlOutputOK, htmlOutputFail, finalHtmlOutput
+Dim htmlOutputOK, htmlOutputFail, finalHtmlOutput, msgBoxOutputOK, msgBoxOutputFail
 
-' Initialize HTML Outputs
+' Initialize HTML and MessageBox Outputs
 htmlOutputOK = "<html><body><h2>SSL Check - OK</h2><table border='1'><tr><th>URL</th></tr>"
 htmlOutputFail = "<h2>SSL Check - FAILED</h2><table border='1'><tr><th>URL</th></tr>"
+msgBoxOutputOK = "SSL Check OK for URLs:" & vbCrLf
+msgBoxOutputFail = "SSL Check FAILED for URLs:" & vbCrLf
 
 ' Create the File System Object
 Set objFSO = CreateObject("Scripting.FileSystemObject")
@@ -31,9 +33,11 @@ Do Until objTextFile.AtEndOfStream
     If Err.Number = 0 Then
         ' No error, SSL is assumed OK
         htmlOutputOK = htmlOutputOK & "<tr><td>" & url & "</td></tr>"
+        msgBoxOutputOK = msgBoxOutputOK & url & vbCrLf
     Else
         ' Error occurred, SSL check failed
         htmlOutputFail = htmlOutputFail & "<tr><td>" & url & "</td></tr>"
+        msgBoxOutputFail = msgBoxOutputFail & url & vbCrLf
     End If
 
     On Error Goto 0 ' Disable error handling
@@ -48,6 +52,13 @@ finalHtmlOutput = htmlOutputOK & htmlOutputFail & "</body></html>"
 Set objTextFile = objFSO.CreateTextFile("SSL-check-result.html", True)
 objTextFile.Write finalHtmlOutput
 objTextFile.Close
+
+' Display results in message boxes
+If Len(msgBoxOutputOK) > 23 Then ' Length of initial message + vbCrLf
+    MsgBox msgBoxOutputOK, vbInformation, "SSL Check - OK"
+End If
+If Len(msgBoxOutputFail) > 27 Then ' Length of initial message + vbCrLf
+    MsgBox msgBoxOutputFail, vbExclamation, "SSL Check - Failed"
 
 ' Clean up
 Set objTextFile = Nothing
