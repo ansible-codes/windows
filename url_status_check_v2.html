@@ -19,11 +19,16 @@ function checkSingleUrl(url) {
 }
 
 function updateStatus(url, status) {
-    // Implement logic to find the URL row and update its status
+    // Logic to find the table row for the URL and update its status cell
+    var rows = document.querySelectorAll('table tr');
+    rows.forEach(function(row) {
+        if (row.cells[0].textContent.trim() === url) {
+            row.cells[1].textContent = status;
+        }
+    });
 }
 </script>
 </head>
-
 <body>
     <h1>URL Status Monitor</h1>
     <textarea id="urlInput" rows="10" cols="50" placeholder="Enter URLs here, one per line"></textarea><br>
