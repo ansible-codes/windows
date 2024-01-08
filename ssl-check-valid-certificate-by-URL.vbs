@@ -1,50 +1,54 @@
 Option Explicit
 
-Dim strURL, objFSO, objTextFile, objWinHttp
-Dim strFilePath, strLine, blnSSLValid
+Dim objFSO, objTextFile, strLine, objHTTP, url, htmlOutput, sslResult
 
-' Path to the text file with URLs
-strFilePath = "C:\path\to\list.txt"
+' Initialize HTML Output
+htmlOutput = "<html><body><table border='1'><tr><th>URL</th><th>SSL Check Result</th></tr>"
 
-' Create FileSystemObject
+' Create the File System Object
 Set objFSO = CreateObject("Scripting.FileSystemObject")
 
-' Open text file with list of URLs
-Set objTextFile = objFSO.OpenTextFile(strFilePath, 1)
+' Open the text file
+Set objTextFile = objFSO.OpenTextFile("url_list.txt", 1) ' 1 = ForReading
 
-' Loop through each line in the text file
-Do While objTextFile.AtEndOfStream <> True
+' Create HTTP request object
+Set objHTTP = CreateObject("MSXML2.ServerXMLHTTP.6.0")
+
+' Read and process each line from the file
+Do Until objTextFile.AtEndOfStream
     strLine = objTextFile.ReadLine
-    strURL = Trim(strLine)
+    url = Trim(strLine) ' Read URL
 
-    ' Check if the line is not empty
-    If strURL <> "" Then
-        blnSSLValid = CheckSSL(strURL)
-        If blnSSLValid Then
-            WScript.Echo "SSL Valid for URL: " & strURL
-        Else
-            WScript.Echo "SSL Invalid or Error for URL: " & strURL
-        End If
+    On Error Resume Next ' Enable error handling
+
+    ' Attempt to connect to the URL
+    objHTTP.Open "GET", url, False
+    objHTTP.Send ""
+
+    ' Check SSL status
+    If Err.Number = 0 Then
+        ' No error, SSL is assumed OK
+        sslResult = "<td style='color: green;'>OK</td>"
+    Else
+        ' Error occurred, SSL check failed
+        sslResult = "<td style='color: red;'>FAIL SSL check</td>"
     End If
+
+    ' Append to HTML output
+    htmlOutput = htmlOutput & "<tr><td>" & url & "</td>" & sslResult & "</tr>"
+
+    On Error Goto 0 ' Disable error handling
 Loop
 
-' Close the text file
+' Finalize HTML Output
+htmlOutput = htmlOutput & "</table></body></html>"
+
+' Write the HTML output to a file
+Set objTextFile = objFSO.CreateTextFile("SSL-check-result.html", True)
+objTextFile.Write htmlOutput
 objTextFile.Close
 
-' Function to check SSL
-Function CheckSSL(strURL)
-    On Error Resume Next
-    Set objWinHttp = CreateObject("WinHttp.WinHttpRequest.5.1")
-    objWinHttp.Open "GET", strURL, False
-    objWinHttp.Send
-
-    ' Check if error occurs
-    If Err.Number = 0 Then
-        CheckSSL = True
-    Else
-        CheckSSL = False
-    End If
-
-    On Error GoTo 0
-    Set objWinHttp = Nothing
-End Function
+' Clean up
+Set objTextFile = Nothing
+Set objFSO = Nothing
+Set objHTTP = Nothing
