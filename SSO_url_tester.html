@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Tester with SSO</title>
+	    <div class="navbar">
+        <a href="#splunkLogs">Splunk Logs</a>
+        <a href="#httpErrorCodes">HTTP Error Code List</a>
+        <a href="#wikiDocs">Wiki Docs</a>
+        <a href="#venafiPortal">Venafi Portal</a>
+    </div>
+    <style>
+        body {
+            background-color: #add8e6; /* Light blue background */
+            color: black; /* Black text for general content */
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            overflow: hidden;
+            background-color: #333; /* Dark background for navbar */
+        }
+
+        .navbar a {
+            float: left;
+            display: block;
+            color: white; /* White text for navbar items */
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        h2, h3 {
+            color: darkblue; /* Dark blue text for headings */
+        }
+
+        button {
+            background-color: red; /* Red background for buttons */
+            color: white; /* White text for buttons */
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: darkred;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <script>
+        function testUrls() {
+            var urls = document.getElementById("urlInput").value.split('\n');
+            var resultArea = document.getElementById("results");
+            var urlsArea = document.getElementById("allUrls");
+            resultArea.innerHTML = ""; // Clear previous results
+            urlsArea.value = ""; // Clear URLs box
+
+            urls.forEach(url => {
+                if (url.trim() !== "") {
+                    var row = resultArea.insertRow(-1);
+                    var dateTimeCell = row.insertCell(0);
+                    var splunkCell = row.insertCell(1);
+                    var testAccessCell = row.insertCell(2);
+                    var ssoStatusCell = row.insertCell(3);
+                    var urlCell = row.insertCell(4);
+
+                    dateTimeCell.innerHTML = new Date().toLocaleString();
+                    splunkCell.innerHTML = `<button onclick="window.open('http://splunk/portal?site=${encodeURIComponent(url)}', '_blank')">Splunk</button>`;
+                    testAccessCell.innerHTML = `<button onclick="window.open('${url}', '_blank')">Test Access</button>`;
+                    ssoStatusCell.innerHTML = "SSO OK"; // Placeholder for actual SSO status
+                    urlCell.innerHTML = url;
+
+                    // Add URL to the URLs box
+                    urlsArea.value += url + "\n";
+
+                    // Note: Actual SSO test result should be implemented here
+                }
+            });
+        }
+
+        function copyUrls() {
+            var urlsArea = document.getElementById("allUrls");
+            urlsArea.select();
+            urlsArea.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand("copy");
+        }
+    </script>
+</head>
+<body>
+    <h2>URL SSO Tester</h2>
+    <textarea id="urlInput" rows="10" cols="50" placeholder="Enter up to 20 URLs, one per line"></textarea><br>
+    <button onclick="testUrls()">Test URLs</button>
+    <hr>
+    <table id="results" border="1">
+        <tr>
+            <th>Date/Time</th>
+            <th>Splunk</th>
+            <th>URL Test</th>
+            <th>SSO Status</th>
+            <th>URL</th>
+        </tr>
+    </table>
+    <hr>
+    <h3>All URLs</h3>
+    <textarea id="allUrls" rows="10" cols="50" readonly></textarea><br>
+    <button onclick="copyUrls()">Copy URLs</button>
+</body>
+</html>
