@@ -71,12 +71,4 @@ Function ExtractValue(result, label, Optional occurrence = 1)
     count = 0
     For i = 0 To UBound(lines)
         line = Trim(lines(i))
-        If InStr(line, label) > 0 Then
-            count = count + 1
-            If count = occurrence Then
-                ExtractValue = Trim(Mid(line, InStr(line, ":") + 2))
-                Exit For
-            End If
-        End If
-    Next
-End Function
+        If InStr(line, label) >
