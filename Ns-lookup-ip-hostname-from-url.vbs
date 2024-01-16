@@ -43,7 +43,7 @@ Do While objTextFile.AtEndOfStream <> True
         strCommand = "nslookup " & strIP
         Set objExecObject = objShell.Exec("%COMSPEC% /c " & strCommand)
         strNsLookupResult = objExecObject.StdOut.ReadAll
-        strHostname = ExtractValue(strNsLookupResult, "Name: ")
+        strHostname = ExtractValue(strNsLookupResult, "Name: ", 1)
     Else
         strHostname = "Not Found"
     End If
@@ -64,11 +64,19 @@ outputFile.WriteLine(htmlContent)
 outputFile.Close
 
 ' Function to extract specific value from nslookup result
-Function ExtractValue(result, label, Optional occurrence = 1)
+Function ExtractValue(result, label, occurrence)
     Dim lines, line, i, count
     ExtractValue = ""
     lines = Split(result, vbCrLf)
     count = 0
     For i = 0 To UBound(lines)
         line = Trim(lines(i))
-        If InStr(line, label) >
+        If InStr(line, label) > 0 Then
+            count = count + 1
+            If count = occurrence Then
+                ExtractValue = Trim(Mid(line, InStr(line, ":") + 2))
+                Exit For
+            End If
+        End If
+    Next
+End Function
