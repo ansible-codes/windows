@@ -6,9 +6,9 @@ htmlFileName = "C:\path\to\your\results.html"
 
 ' HTML content initialization
 Dim htmlHeader, htmlFooter, htmlContent
-htmlHeader = "<html><head><title>URL Check Results</title></head><body><h1>URL Check Results</h1><table border='1'><tr><th>URL</th><th>Status Code</th><th>Date and Time</th><th>Status</th></tr>"
+htmlHeader = "<html><head><title>URL Check Results</title></head><body><h1>URL Check Results</h1><table border='1'><tr><th>URL</th><th>Status Code</th><th>Date and Time</th><th>Status</th><th>Actions</th></tr>"
 htmlContent = ""
-htmlFooter = "</table></body></html>"
+htmlFooter = "</table><br><button onclick='window.open(""https://splunk.com"", ""_blank"")'>Splunk Log</button></body></html>"
 
 ' Create the File System Object
 Set objFSO = CreateObject("Scripting.FileSystemObject")
@@ -34,12 +34,12 @@ Sub CheckURL(url)
     objHTTP.Send ""
     If Err.Number = 0 Then
         If objHTTP.Status = 200 Then
-            htmlContent = htmlContent & "<tr><td>" & url & "</td><td>" & objHTTP.Status & "</td><td>" & Now & "</td><td>Accessible</td></tr>"
+            htmlContent = htmlContent & "<tr><td>" & url & "</td><td>" & objHTTP.Status & "</td><td>" & Now & "</td><td>Accessible</td><td><button onclick='window.open(""" & url & """, ""_blank"")'>Test URL</button></td></tr>"
         Else
-            htmlContent = htmlContent & "<tr><td>" & url & "</td><td>" & objHTTP.Status & "</td><td>" & Now & "</td><td>Not Accessible</td></tr>"
+            htmlContent = htmlContent & "<tr><td>" & url & "</td><td>" & objHTTP.Status & "</td><td>" & Now & "</td><td>Not Accessible</td><td><button onclick='window.open(""" & url & """, ""_blank"")'>Test URL</button></td></tr>"
         End If
     Else
-        htmlContent = htmlContent & "<tr><td>" & url & "</td><td>Error</td><td>" & Now & "</td><td>Not Accessible</td></tr>"
+        htmlContent = htmlContent & "<tr><td>" & url & "</td><td>Error</td><td>" & Now & "</td><td>Not Accessible</td><td><button onclick='window.open(""" & url & """, ""_blank"")'>Test URL</button></td></tr>"
     End If
     On Error GoTo 0
     Set objHTTP = Nothing
