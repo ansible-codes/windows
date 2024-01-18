@@ -2,49 +2,107 @@
 <html>
 <head>
     <title>YAML Editor</title>
-    <script>
-        // JavaScript code goes here
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333333;
+            padding: 20px;
+        }
 
+        input[type="file"], textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #004a77; /* Bank of America blue */
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        #loadFile {
+            background-color: #e31837; /* Bank of America red */
+        }
+
+        #saveText, #copyText, #clearText {
+            background-color: #0050ef; /* Slightly brighter blue for distinction */
+        }
+
+        textarea {
+            border: 2px solid #004a77;
+        }
+
+        #searchBox, #savePath {
+            border: 2px solid #e31837;
+        }
+
+        /* Additional styling as needed */
+    </style>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('loadFile').addEventListener('click', loadAndBackupFile);
+            document.getElementById('fileInput').addEventListener('change', loadAndBackupFile);
             document.getElementById('transferContent').addEventListener('click', transferContent);
             document.getElementById('copyText').addEventListener('click', copyText);
             document.getElementById('clearText').addEventListener('click', clearText);
             document.getElementById('saveText').addEventListener('click', saveText);
-            document.getElementById('searchText').addEventListener('click', searchText);
+            // Search functionality needs to be implemented as per your specific requirements
         });
 
         function loadAndBackupFile() {
-            // Implementation of file loading and backing up
-            // User needs to select a file through file input
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const content = e.target.result;
+                    document.getElementById('textbox1').value = content;
+                    // Backup logic goes here
+                };
+
+                reader.readAsText(file);
+            }
         }
 
         function transferContent() {
-            // Transfer content from textbox1 to textbox2
             document.getElementById('textbox2').value = document.getElementById('textbox1').value;
         }
 
         function copyText() {
-            // Copy content from textbox2
             let text = document.getElementById('textbox2');
             text.select();
             document.execCommand('copy');
         }
 
         function clearText() {
-            // Clear textbox2
             document.getElementById('textbox2').value = '';
         }
 
         function saveText() {
-            // Save the content of textbox2 as a downloadable file
+            const text = document.getElementById('textbox2').value;
+            const blob = new Blob([text], { type: 'text/plain' });
+            const href = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = href;
+            link.download = 'edited_file.yaml'; // Default file name, you might want to make this dynamic
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(href);
         }
-
-        function searchText() {
-            // Search functionality for textbox2
-        }
-
-        // Additional JavaScript functionalities...
     </script>
 </head>
 <body>
