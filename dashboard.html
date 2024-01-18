@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body {
+            background-color: lightblue;
+            font-family: Arial, sans-serif;
+        }
+
+        .menu ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+
+        .menu ul li {
+            float: left;
+        }
+
+        .menu ul li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .menu ul li a:hover {
+            background-color: white;
+            color: black;
+        }
+
+        .dashboard-content {
+            margin: 20px;
+            padding: 20px;
+            border-top: 3px solid red;
+        }
+
+        a {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .http-errors {
+            margin-top: 20px;
+        }
+
+        .http-errors p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <ul>
+            <li><a href="nslookup_url_output.html">NSLookup URL Output</a></li>
+            <li><a href="SSL-check-result.html">SSL Check Result</a></li>
+            <li><a href="test_url_griffin_results.html">Test URL Griffin Results</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+        </ul>
+    </div>
+
+    <div class="dashboard-content">
+        <p id="datetime"></p>
+        <p>Windows ID: <span id="windowsId">[Windows ID]</span></p>
+        <p>Host: <span id="host">[Host Name]</span></p>
+
+        <a href="your_confluence_link">Confluence Page</a>
+        <a href="your_splunk_link">Splunk Logs</a>
+        <a href="your_jira_link">JIRA Page</a>
+        <a href="your_bitbucket_link">Bitbucket Page</a>
+
+        <div class="http-errors">
+            <h3>HTTP Error Codes:</h3>
+            <p>200: OK - The request has succeeded.</p>
+            <p>301: Moved Permanently - The URL of the requested resource has been changed permanently.</p>
+            <p>302: Found - The URI of requested resource has been temporarily moved.</p>
+            <p>400: Bad Request - The server cannot process the request due to a client error.</p>
+            <p>401: Unauthorized - Authentication is required and has failed or has not been provided.</p>
+            <p>403: Forbidden - The server understood the request but refuses to authorize it.</p>
+            <p>404: Not Found - The server can't find the requested resource.</p>
+            <p>500: Internal Server Error - The server has encountered a situation it doesn't know how to handle.</p>
+            <p>502: Bad Gateway - The server received an invalid response from the upstream server.</p>
+            <p>503: Service Unavailable - The server is not ready to handle the request.</p>
+            <!-- Add more HTTP error codes as needed -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('datetime').innerHTML = new Date();
+        // Additional JavaScript for dynamic content (like Windows ID and Hostname) can be added here
+    </script>
+</body>
+</html>
