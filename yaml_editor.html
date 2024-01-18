@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YAML Editor</title>
+    <script>
+        // JavaScript code goes here
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loadFile').addEventListener('click', loadAndBackupFile);
+            document.getElementById('transferContent').addEventListener('click', transferContent);
+            document.getElementById('copyText').addEventListener('click', copyText);
+            document.getElementById('clearText').addEventListener('click', clearText);
+            document.getElementById('saveText').addEventListener('click', saveText);
+            document.getElementById('searchText').addEventListener('click', searchText);
+        });
+
+        function loadAndBackupFile() {
+            // Implementation of file loading and backing up
+            // User needs to select a file through file input
+        }
+
+        function transferContent() {
+            // Transfer content from textbox1 to textbox2
+            document.getElementById('textbox2').value = document.getElementById('textbox1').value;
+        }
+
+        function copyText() {
+            // Copy content from textbox2
+            let text = document.getElementById('textbox2');
+            text.select();
+            document.execCommand('copy');
+        }
+
+        function clearText() {
+            // Clear textbox2
+            document.getElementById('textbox2').value = '';
+        }
+
+        function saveText() {
+            // Save the content of textbox2 as a downloadable file
+        }
+
+        function searchText() {
+            // Search functionality for textbox2
+        }
+
+        // Additional JavaScript functionalities...
+    </script>
+</head>
+<body>
+    <input type="file" id="fileInput" accept=".yaml">
+    <button id="loadFile">Load and Backup File</button>
+    <br><br>
+    <textarea id="textbox1" rows="10" cols="50" readonly></textarea>
+    <button id="transferContent">Transfer Content</button>
+    <textarea id="textbox2" rows="10" cols="50"></textarea>
+    <br><br>
+    <button id="copyText">Copy Text</button>
+    <button id="clearText">Clear Text</button>
+    <button id="saveText">Save Text</button>
+    <br><br>
+    Search in Textbox2: <input type="text" id="searchBox">
+    <button id="searchText">Search</button>
+    <br><br>
+    Save Path: <input type="text" id="savePath">
+</body>
+</html>
