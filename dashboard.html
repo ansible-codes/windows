@@ -4,7 +4,7 @@
     <title>Dashboard</title>
     <style>
         body {
-            background-color: lightblue;
+            background-color: white;
             font-family: Arial, sans-serif;
         }
 
@@ -57,10 +57,16 @@
 <body>
     <div class="menu">
         <ul>
+            <li><a href="dashboard.html" target="_self">Dashboard</a></li>
             <li><a href="nslookup_url_output.html" target="content-frame">NSLookup URL Output</a></li>
             <li><a href="SSL-check-result.html" target="content-frame">SSL Check Result</a></li>
             <li><a href="test_url_griffin_results.html" target="content-frame">Test URL Griffin Results</a></li>
-            <li><a href="dashboard.html" target="content-frame">Dashboard</a></li>
+            <li><a href="dashboard.html" target="_blank">link5</a></li>
+            <li><a href="dashboard.html" target="_blank">link6</a></li>
+            <li><a href="dashboard.html" target="_blank">link7</a></li>
+            <li><a href="dashboard.html" target="_blank">link8</a></li>
+            <li><a href="dashboard.html" target="_blank">link9</a></li>
+            <li><a href="dashboard.html" target="_blank">link10</a></li>
         </ul>
     </div>
 
@@ -76,7 +82,23 @@
 
         <div class="http-errors">
             <h3>HTTP Error Codes:</h3>
-            <!-- ... (HTTP error codes) ... -->
+            <p>200: OK - The request has succeeded.</p>
+            <p>201: Created - The request has been fulfilled and has resulted in a new resource being created.</p>
+            <p>202: Accepted - The request has been accepted for processing, but the processing has not been completed.</p>
+            <p>204: No Content - The server successfully processed the request, but is not returning any content.</p>
+            <p>301: Moved Permanently - The requested resource has been assigned a new permanent URI.</p>
+            <p>302: Found - The requested resource resides temporarily under a different URI.</p>
+            <p>304: Not Modified - There is no new data to return.</p>
+            <p>400: Bad Request - The request cannot be fulfilled due to bad syntax.</p>
+            <p>401: Unauthorized - Authentication is required and has failed or has not yet been provided.</p>
+            <p>403: Forbidden - The server understood the request but refuses to authorize it.</p>
+            <p>404: Not Found - The requested resource could not be found but may be available again in the future.</p>
+            <p>405: Method Not Allowed - A request was made of a resource using a request method not supported by that resource.</p>
+            <p>408: Request Timeout - The server timed out waiting for the request.</p>
+            <p>500: Internal Server Error - A generic error message, given when no more specific message is suitable.</p>
+            <p>501: Not Implemented - The server either does not recognize the request method, or it lacks the ability to fulfill the request.</p>
+            <p>503: Service Unavailable - The server is currently unavailable (overloaded or down).</p>
+            <!-- Add more HTTP error codes as needed -->
         </div>
 
         <iframe id="content-frame" name="content-frame"></iframe>
