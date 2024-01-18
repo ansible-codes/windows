@@ -10,7 +10,7 @@
             padding: 20px;
         }
 
-        input[type="file"], textarea, input[type="text"] {
+        input[type="file"], textarea {
             width: 100%;
             padding: 10px;
             margin: 8px 0;
@@ -26,7 +26,7 @@
             margin: 4px 0;
             border: none;
             cursor: pointer;
-            width: auto; /* Reduced size */
+            width: auto;
         }
 
         button:hover {
@@ -37,7 +37,7 @@
             background-color: #e31837; /* Bank of America red */
         }
 
-        #saveText, #copyText, #clearText {
+        #saveText, #copyText, #clearText, #compareText {
             background-color: #0050ef; /* Slightly brighter blue for distinction */
         }
 
@@ -45,8 +45,8 @@
             border: 2px solid #004a77;
         }
 
-        #searchBox {
-            border: 2px solid #e31837;
+        #comparisonResult {
+            color: #e31837; /* Bank of America red for differences */
         }
 
         /* Additional styling as needed */
@@ -58,7 +58,7 @@
             document.getElementById('copyText').addEventListener('click', copyText);
             document.getElementById('clearText').addEventListener('click', clearText);
             document.getElementById('saveText').addEventListener('click', saveText);
-            // Search functionality needs to be implemented as per your specific requirements
+            document.getElementById('compareText').addEventListener('click', compareText);
         });
 
         function loadAndBackupFile() {
@@ -97,11 +97,23 @@
             const href = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = href;
-            link.download = 'edited_file.yaml'; // Default file name, you might want to make this dynamic
+            link.download = 'edited_file.yaml';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(href);
+        }
+
+        function compareText() {
+            const originalText = document.getElementById('textbox1').value;
+            const editedText = document.getElementById('textbox2').value;
+            const comparisonResult = document.getElementById('comparisonResult');
+
+            if (originalText === editedText) {
+                comparisonResult.textContent = 'No changes detected.';
+            } else {
+                comparisonResult.textContent = 'Changes detected.';
+            }
         }
     </script>
 </head>
@@ -113,11 +125,11 @@
     <button id="transferContent">Transfer Content</button>
     <textarea id="textbox2" rows="10" cols="50"></textarea>
     <br><br>
-    Search in Textbox2: <input type="text" id="searchBox">
-    <button id="searchText">Search</button>
-    <br><br>
     <button id="copyText">Copy Text</button>
     <button id="clearText">Clear Text</button>
     <button id="saveText">Save Text</button>
+    <button id="compareText">Compare Text</button>
+    <br><br>
+    <div id="comparisonResult"></div>
 </body>
 </html>
