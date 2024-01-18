@@ -22,11 +22,11 @@
         button {
             background-color: #004a77; /* Bank of America blue */
             color: white;
-            padding: 14px 20px;
-            margin: 8px 0;
+            padding: 10px 15px;
+            margin: 4px 0;
             border: none;
             cursor: pointer;
-            width: 100%;
+            width: auto; /* Reduced size */
         }
 
         button:hover {
@@ -45,7 +45,7 @@
             border: 2px solid #004a77;
         }
 
-        #searchBox, #savePath {
+        #searchBox {
             border: 2px solid #e31837;
         }
 
@@ -113,13 +113,11 @@
     <button id="transferContent">Transfer Content</button>
     <textarea id="textbox2" rows="10" cols="50"></textarea>
     <br><br>
-    <button id="copyText">Copy Text</button>
-    <button id="clearText">Clear Text</button>
-    <button id="saveText">Save Text</button>
-    <br><br>
     Search in Textbox2: <input type="text" id="searchBox">
     <button id="searchText">Search</button>
     <br><br>
-    Save Path: <input type="text" id="savePath">
+    <button id="copyText">Copy Text</button>
+    <button id="clearText">Clear Text</button>
+    <button id="saveText">Save Text</button>
 </body>
 </html>
