@@ -37,7 +37,7 @@
             background-color: #e31837; /* Bank of America red */
         }
 
-        #saveText, #copyText, #clearText, #compareText {
+        #saveText, #copyText, #clearText, #compareText, #undo, #redo {
             background-color: #0050ef; /* Slightly brighter blue for distinction */
         }
 
@@ -45,13 +45,27 @@
             border: 2px solid #004a77;
         }
 
-        #comparisonResult {
-            color: #e31837; /* Bank of America red for differences */
+        .added {
+            color: green;
         }
 
-        /* Additional styling as needed */
+        .removed {
+            color: red;
+            text-decoration: line-through;
+        }
+
+        .changed {
+            color: blue;
+        }
+
+        #comparisonResult {
+            margin-top: 20px;
+        }
     </style>
     <script>
+        let history = [];
+        let currentHistoryIndex = -1;
+
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('fileInput').addEventListener('change', loadAndBackupFile);
             document.getElementById('transferContent').addEventListener('click', transferContent);
@@ -59,6 +73,17 @@
             document.getElementById('clearText').addEventListener('click', clearText);
             document.getElementById('saveText').addEventListener('click', saveText);
             document.getElementById('compareText').addEventListener('click', compareText);
+            document.getElementById('undo').addEventListener('click', undo);
+            document.getElementById('redo').addEventListener('click', redo);
+
+            const textbox2 = document.getElementById('textbox2');
+            textbox2.addEventListener('input', function() {
+                if (currentHistoryIndex !== history.length - 1) {
+                    history = history.slice(0, currentHistoryIndex + 1);
+                }
+                history.push(textbox2.value);
+                currentHistoryIndex++;
+            });
         });
 
         function loadAndBackupFile() {
@@ -79,6 +104,7 @@
 
         function transferContent() {
             document.getElementById('textbox2').value = document.getElementById('textbox1').value;
+            recordHistory();
         }
 
         function copyText() {
@@ -89,6 +115,7 @@
 
         function clearText() {
             document.getElementById('textbox2').value = '';
+            recordHistory();
         }
 
         function saveText() {
@@ -105,14 +132,46 @@
         }
 
         function compareText() {
-            const originalText = document.getElementById('textbox1').value;
-            const editedText = document.getElementById('textbox2').value;
+            const originalText = document.getElementById('textbox1').value.split('\n');
+            const editedText = document.getElementById('textbox2').value.split('\n');
             const comparisonResult = document.getElementById('comparisonResult');
+            comparisonResult.innerHTML = '';
 
-            if (originalText === editedText) {
-                comparisonResult.textContent = 'No changes detected.';
-            } else {
-                comparisonResult.textContent = 'Changes detected.';
+            let maxLength = Math.max(originalText.length, editedText.length);
+
+            for (let i = 0; i < maxLength; i++) {
+                if (i >= originalText.length) {
+                    comparisonResult.innerHTML += '<div class="added">Added: ' + editedText[i] + '</div>';
+                } else if (i >= editedText.length) {
+                    comparisonResult.innerHTML += '<div class="removed">Removed: ' + originalText[i] + '</div>';
+                } else if (originalText[i] !== editedText[i]) {
+                    comparisonResult.innerHTML += '<div class="changed">Changed: ' + editedText[i] + '</div>';
+                }
+            }
+        }
+
+        function undo() {
+            if (currentHistoryIndex > 0) {
+                currentHistoryIndex--;
+                document.getElementById('textbox2').value = history[currentHistoryIndex];
+            }
+        }
+
+        function redo() {
+            if (currentHistoryIndex < history.length - 1) {
+                currentHistoryIndex++;
+                document.getElementById('textbox2').value = history[currentHistoryIndex];
+            }
+        }
+
+        function recordHistory() {
+            const textbox2Value = document.getElementById('textbox2').value;
+            if (history[currentHistoryIndex] !== textbox2Value) {
+                if (currentHistoryIndex !== history.length - 1) {
+                    history = history.slice(0, currentHistoryIndex + 1);
+                }
+                history.push(textbox2Value);
+                currentHistoryIndex++;
             }
         }
     </script>
@@ -129,6 +188,8 @@
     <button id="clearText">Clear Text</button>
     <button id="saveText">Save Text</button>
     <button id="compareText">Compare Text</button>
+    <button id="undo">Undo</button>
+    <button id="redo">Redo</button>
     <br><br>
     <div id="comparisonResult"></div>
 </body>
