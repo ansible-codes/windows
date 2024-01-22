@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Checker</title>
+    <style>
+        .status-ok {
+            color: green;
+        }
+        .status-fail {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <select id="urlSelect" multiple>
+        <option value="http://example1.com">http://example1.com</option>
+        <!-- Add more options here up to http://example20.com -->
+        <option value="http://example20.com">http://example20.com</option>
+    </select>
+    <button id="checkButton">Check URLs</button>
+    <input type="number" id="intervalInput" placeholder="Interval">
+    <select id="intervalUnit">
+        <option value="seconds">Seconds</option>
+        <option value="minutes">Minutes</option>
+    </select>
+    <button id="startAutoCheck">Start Auto Check</button>
+    <button id="stopAutoCheck">Stop Auto Check</button>
+    <div id="autoCheckStatus">Auto check is OFF</div>
+    <button id="copyTable">Copy Table</button>
+    <table id="resultsTable">
+        <tr>
+            <th>URL</th>
+            <th>Status</th>
+            <th>Date & Time</th>
+        </tr>
+        <!-- Results will be inserted here -->
+    </table>
+
+    <select id="redirectSelect" multiple>
+        <option value="http://confluence">Confluence</option>
+        <option value="http://splunkuat">Splunk UAT</option>
+        <option value="http://jira">Jira</option>
+        <option value="http://bitbucket">Bitbucket</option>
+    </select>
+    <button id="redirectButton">Redirect to Selected</button>
+
+    <script>
+        var intervalId;
+
+        document.getElementById('checkButton').addEventListener('click', checkUrls);
+        document.getElementById('startAutoCheck').addEventListener('click', startAutoCheck);
+        document.getElementById('stopAutoCheck').addEventListener('click', stopAutoCheck);
+        document.getElementById('copyTable').addEventListener('click', copyTable);
+        document.getElementById('redirectButton').addEventListener('click', redirectSelected);
+
+        function checkUrls() {
+            var selectedOptions = document.getElementById('urlSelect').selectedOptions;
+            var resultsTable = document.getElementById('resultsTable');
+            resultsTable.innerHTML = '<tr><th>URL</th><th>Status</th><th>Date & Time</th></tr>'; // Clear previous results
+
+            Array.from(selectedOptions).forEach(function(option) {
+                var url = option.value;
+                fetch(url, { mode: 'no-cors' }).then(function(response) {
+                    appendResult(url, 'OK');
+                }).catch(function() {
+                    appendResult(url, 'FAIL');
+                });
+            });
+        }
+
+        function appendResult(url, status) {
+            var resultsTable = document.getElementById('resultsTable');
+            var row = resultsTable.insertRow();
+            var cell = row.insertCell();
+            var link = document.createElement('a');
+            link.href = status === 'FAIL' ? 'https://splunk/dashboard' : url;
+            link.textContent = url;
+            link.target = '_blank';
+            cell.appendChild(link);
+
+            var statusCell = row.insertCell();
+            statusCell.textContent = status;
+            statusCell.classList.add(status === 'OK' ? 'status-ok' : 'status-fail');
+
+            var dateCell = row.insertCell();
+            dateCell.textContent = new Date().toLocaleString();
+        }
+
+        function startAutoCheck() {
+            var interval = Number(document.getElementById('intervalInput').value);
+            var unit = document.getElementById('intervalUnit').value;
+            var multiplier = unit === 'minutes' ? 60000 : 1000;
+            clearInterval(intervalId);
+            intervalId = setInterval(checkUrls, interval * multiplier);
+            document.getElementById('autoCheckStatus').textContent = 'Auto check is ON';
+        }
+
+        function stopAutoCheck() {
+            clearInterval(intervalId);
+            document.getElementById('autoCheckStatus').textContent = 'Auto check is OFF';
+        }
+
+        function copyTable() {
+            var table = document.getElementById('resultsTable');
+            var range = document.createRange();
+            range.selectNode(table);
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+            alert('Table copied to clipboard!');
+        }
+
+        function redirectSelected() {
+            var selectedOptions = document.getElementById('redirectSelect').selectedOptions;
+            Array.from(selectedOptions).forEach(function(option) {
+                window.open(option.value, '_blank');
+            });
+        }
+    </script>
+</body>
+</html>
