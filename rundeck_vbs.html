@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Run VBS Script</title>
+    <script type="text/javascript">
+        function runVbsScript() {
+            try {
+                var shell = new ActiveXObject("WScript.Shell");
+                shell.Run("C:\\path\\to\\your\\script.vbs");
+            } catch (e) {
+                alert("ActiveXObject is not supported or script execution is blocked. Error: " + e.message);
+            }
+        }
+    </script>
+</head>
+<body>
+    <button onclick="runVbsScript()">Run VBS Script</button>
+</body>
+</html>
